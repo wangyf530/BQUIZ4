@@ -42,9 +42,13 @@ body
 #right
 {
 	display:inline-block;
-	width:65%;
+	/* 0207 讓版型更好看 65 -> 71*/
+	width:71%;
+	/* 0207 覺得太寬可以改1% */
 	padding:2%;
-	min-height:550px;
+	/* 0207 有問題 超過550的話會一直拉長 不符合原本的1024*768 改為固定 + overflow:auto */
+	height:550px;
+	overflow: auto;
 	border:#000 1px solid;
 }
 #bottom
@@ -65,7 +69,8 @@ body
 }
 .all td
 {
-	min-width:100px;
+	/* 0207 too wide 100>-50 */
+	min-width:50px;
 	padding:10px;
 }
 .tt

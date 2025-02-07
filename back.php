@@ -1,3 +1,5 @@
+<?php include "api/db.php"?>
+
 <!DOCTYPE html
 	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!-- saved from url=(0057)?do=admin -->
@@ -9,10 +11,10 @@
 	<title>┌精品電子商務網站」</title>
 	<!-- 0207 改路徑 -->
 	<link href="./css/css.css" rel="stylesheet" type="text/css">
-        <!-- 0207 改路徑 -->
-        <script src="./js/js.js"></script>
-        <!-- 0207 加JS -->
-        <script src="./js/jquery-3.4.1.min.js"></script>
+	<!-- 0207 改路徑 -->
+	<script src="./js/js.js"></script>
+	<!-- 0207 加JS -->
+	<script src="./js/jquery-3.4.1.min.js"></script>
 </head>
 
 <body>
@@ -35,10 +37,23 @@
 				<a href="?do=mem">會員管理</a>
 				<a href="?do=bot">頁尾版權管理</a>
 				<a href="?do=news">最新消息管理</a>
-				<a href="?do=logout" style="color:#f00;">登出</a>
+				<a href="./api/logout.php?table=Admin" style="color:#f00;">登出</a>
 			</div>
 		</div>
 		<div id="right">
+			<!-- 0207 include file 
+			 main->admin 
+			 front->back 
+			 --> 
+			<?php
+			$do = $_GET['do'] ?? 'admin';
+			$file = "back/" . $do . ".php";
+			if (file_exists($file)) {
+				include $file;
+			} else {
+				include "back/admin.php";
+			}
+			?>
 		</div>
 		<div id="bottom" style="line-height:70px; color:#FFF; background:url(icon/bot.png);" class="ct">
 			頁尾版權 : </div>

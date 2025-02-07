@@ -1,168 +1,137 @@
 <?php
-// 系統默認+0時區
-// 後續實際應用可以先get再set
-date_default_timezone_set("Asia/Taipei");
+date_default_timezone_set('Asia/Taipei');
 session_start();
-class DB{
-    protected $dsn = "mysql:host=localhost; charset=utf8; dbname=db18";
+
+class DB
+{
+    protected $dsn = "mysql:host=localhost;charset=utf8;dbname=db18";
     protected $pdo;
     protected $table;
 
-    function __construct($table){
-        $this -> table = $table;
-        $this -> pdo = new PDO($this->dsn,'root','');
+    function __construct($table)
+    {
+        $this->table = $table;
+        $this->pdo = new PDO($this->dsn, 'root', '');
     }
 
-    /**
-     * 撈出全部資料
-     * 1. 整張資料表
-     * 2. 有條件
-     * 3. 其他SQL功能
-     */
-    function all(...$arg){
-        $sql = "SELECT * FROM $this->table";
-        
-        // 有內容
-        if(!empty($arg[0])){
-            // 是否是陣列
-            if (is_array($arg[0])){
-                $where = $this->a2s($arg[0]);
-                $sql = $sql . " WHERE " . join(" && ",$where);
-            } else {
-                $sql .= $arg[0];
-            } 
-        }
-
-        if(!empty($arg[1])){
-            $sql = $sql . $arg[1];
-        }
-        return $this->fetchALL($sql);
-    }
-
-    function find($id){
+    // 超過兩個參數就直接用...$arg
+    function all(...$arg)
+    {
         $sql = "SELECT * FROM $this->table ";
-
-        if(is_array($id)){
-            $where = $this->a2s($id);
-            $sql = $sql . " WHERE " . join(" && ", $where);
-        } else {
-            $sql .= " WHERE `id` = '$id' ";
+        // 如果...$arg有東西
+        if (!empty($arg[0]) && is_array($arg[0])) {
+            $tmp = $this->a2s($arg[0]);
+            $sql .= " WHERE " . join(" && ", $tmp);
+        } else if (!is_array($arg[0])) {
+            // 如果第一個不是空的但不是陣列
+            $sql .= $arg[1];
         }
-        return $this->fetchOne($sql);
+        //  再後面 limit/having/group by 之類的
+        if (!empty($arg[1])) {
+            $sql .= $arg[1];
+        }
+        return $this->fetch_all($sql);
     }
 
-    function save($array){
-        if(isset($array['id'])){
-            //update
-            //update table set `欄位1`='值1',`欄位2`='值2' where `id`='值' 
+    function find($array)
+    {
+        $sql = "SELECT * FROM $this->table ";
+        if (is_array($array)) {
+            $tmp = $this->a2s($array);
+            $sql .= " WHERE " . join(" && ", $tmp);
+        } else {
+            // 不是字串 默認是id
+            $sql .= " WHERE `id`='$array'";
+        }
+        return $this->fetch_one($sql);
+    }
+
+    function save($array)
+    {
+        if (isset($array['id'])) {
+            // update
             $id = $array['id'];
-            unset($array['id']);
-            $set = $this -> a2s($array);
-            $sql = "UPDATE $this->table SET " . join(",",$set) . " WHERE `id` = '$id'";
+            $tmp = $this->a2s($array);
+            $sql = "UPDATE $this->table SET " . join(",", $tmp) . " WHERE `id` = '$id'";
         } else {
             // insert
-            $cols = array_keys($array);
-            // $values = array_values($array);
-            $sql = "INSERT INTO $this->table (`" . join("`,`",$cols) . "`) VALUES ('" . join("','",$array) . "')";
+            // 變成陣列
+            $keys = join("`,`", array_keys($array));
+            $values = join("','", $array);
+            $sql = "INSERT INTO $this->table (`{$keys}`) VALUES ('{$values}')";
         }
         // dd($array);
         // echo $sql;
         return $this->pdo->exec($sql);
     }
 
-
-    function del($id){
+    function del($array)
+    {
         $sql = "DELETE FROM $this->table ";
-
-        if(is_array($id)){
-            $where = $this->a2s($id);
-            $sql = $sql . " WHERE " . join(" && ", $where);
+        if (is_array($array)) {
+            $tmp = $this->a2s($array);
+            $sql .= " WHERE " . join(" && ", $tmp);
         } else {
-            $sql .= " WHERE `id` = '$id' ";
+            // 不是字串 默認是id
+            $sql .= " WHERE `id`='$array'";
         }
-        echo $sql;
         return $this->pdo->exec($sql);
     }
 
-    /**
-     * 把陣列轉成條件字串陣列
-     */
-    function a2s($array){
-        $tmp=[];
+    function count(...$arg)
+    {
+        $sql = "SELECT count(*) FROM $this->table";
+        // 如果...$array
+        if (!empty($arg[0]) && is_array($arg[0])) {
+            $tmp = $this->a2s($arg[0]);
+            $sql .= " WHERE " . join(" && ", $tmp);
+        } else if (is_string($arg[0])) {
+            // 如果第一個不是空的但不是陣列
+            $sql .= $arg[1];
+        }
+        //  再後面 limit/having/group by 之類的
+        if (!empty($arg[1])) {
+            $sql .= $arg[1];
+        }
+        // echo $sql;
+        return $this->pdo->query($sql)->fetchColumn();
+    }
+
+    function math() {}
+
+    // solid 單一工作職責原則
+    function a2s($array)
+    {
+        $tmp = [];
         foreach ($array as $key => $value) {
-            $tmp[]="`$key`='$value'";
-            // $tmp[]=sprintf("%s='%s'",$key,$value);
+            $tmp[] = "`$key`='$value'";
         }
         return $tmp;
     }
 
-    // protected or private 保護但還是能使用
-    /**
-     * 取得單筆資料
-     */
-    protected function fetchOne($sql){
-        // echo $sql 看對不對
+    function fetch_one($sql)
+    {
         return $this->pdo->query($sql)->fetch(PDO::FETCH_ASSOC);
     }
-    
-    protected function fetchAll($sql){
-        // echo $sql 看對不對
-        return $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
-    }
-
-    // 241202 內建函式可以在class裡面重複
-    function max($col,$where=[]){
-        return $this->math('max',$col,$where);
-    }
-    function min($col,$where=[]){
-        return $this->math('min',$col,$where);
-    }
-    function sum($col, $where=[]){
-        return $this->math('sum',$col,$where);
-    }
-    function count($where=[]){
-        return $this->math('count','*',$where);
-    }
-    function avg($col,$where=[]){
-        return $this->avg('avg',$col,$where);
-    }
-
-    /** 241202
-     * math() - 方便使用各種聚合函式
-     * @param $math string 要用的函式名稱
-     * @param $col string 要獲取的欄位
-     * @param $where string 是否有其他條件
-     */
-    protected function math($math, $col='id',$where=[]){
-        $sql = "SELECT $math($col) FROM $this->table";
-        if(!empty($where)){
-            $tmp = $this->a2s($where);
-            $sql = $sql . " WHERE " . join(" && ", $tmp);
-        }
-        // echo $sql."<br>";
-        return $this->pdo->query($sql)->fetchColumn();
-    }
+    function fetch_all() {}
+}
+function to($url)
+{
+    header("location:" . $url);
 }
 
-// 最萬用的 但要打sql語法
-function q($sql){
-    $pdo = new PDO("mysql:host=localhost; charset=utf8; dbname=db18",'root','');
-    return $pdo -> query($sql) -> fetchAll();
+function q($sql)
+{
+    $dsn = "mysql:host=localhost;charset=utf8;dbname=db18";
+    $pdo = new PDO($dsn, 'root', '');
+    return $pdo->query($sql)->fetchAll();
 }
-
-function dd($array){
+function dd($array)
+{
     echo "<pre>";
     print_r($array);
     echo "</pre>";
 }
-
-function to($url){
-    header("location:$url");
-}
-
-// 宣告db
-$Poster = new DB('posters');   
-$Movie = new DB('movies');
-$Order = new DB('orders');
-?>
+$Mem = new DB("members");
+$Admin = new DB("admins");
