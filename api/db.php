@@ -4,16 +4,9 @@
 date_default_timezone_set("Asia/Taipei");
 session_start();
 class DB{
-    protected $dsn = "mysql:host=localhost; charset=utf8; dbname=db19";
+    protected $dsn = "mysql:host=localhost; charset=utf8; dbname=db18";
     protected $pdo;
     protected $table;
-
-    public static $level=[
-        1=>'普通級',
-        2=>'輔導級',
-        3=>'保護級',
-        4=>'限制級'
-    ];
 
     function __construct($table){
         $this -> table = $table;
@@ -154,7 +147,7 @@ class DB{
 
 // 最萬用的 但要打sql語法
 function q($sql){
-    $pdo = new PDO("mysql:host=localhost; charset=utf8; dbname=db19",'root','');
+    $pdo = new PDO("mysql:host=localhost; charset=utf8; dbname=db18",'root','');
     return $pdo -> query($sql) -> fetchAll();
 }
 
