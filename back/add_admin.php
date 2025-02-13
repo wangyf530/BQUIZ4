@@ -41,3 +41,6 @@
         <input type="reset" value="重置">
     </div>
 </form>
+
+
+<!-- extra:判斷是否有空白 有空白的話不讓submit -->
