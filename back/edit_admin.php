@@ -1,8 +1,8 @@
+<!-- 0213 -->
 <?php
     $row=$Admin->find($_GET['id']);
     $userPr = unserialize($row['pr']);
 ?>
-<!-- 0213 -->
 <h2 class="ct">修改管理權限</h2>
 <!-- table.all>tr*3>td.tt.ct+td.pp>input:text -->
 <form action="./api/save_admin.php" method="post">
