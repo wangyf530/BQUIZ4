@@ -1,5 +1,5 @@
 <div class="ct">
-    <button>新增管理員</button>
+    <button onclick="location.href='?do=add_admin'">新增管理員</button>
 </div>
 <?php //echo serialize([1,2,3,4,5])?>
 <!-- table.all>(tr.tt.ct>td*3)+(tr.pp.ct>td*3) -->
