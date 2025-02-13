@@ -12,27 +12,34 @@
 </div>
 <!-- table.all>(tr>td.tt+td.tt.ct>button*2)+(tr.ct>td.pp+td.pp>button*2)*2 -->
 <table class="all">
-    <tr>
-        <td class="tt" width="70%">流行皮件</td>
-        <td class="tt ct">
-            <button>修改</button>
-            <button>刪除</button>
-        </td>
-    </tr>
-    <tr class="ct">
-        <td class="pp">女用皮件</td>
+    <?php
+    $bigs = $Type->all(['big_id' => 0]);
+    foreach ($bigs as $big):
+    ?>
+        <tr class="">
+            <td class="tt"><?=$big['name'];?></td>
+            <td class="tt ct">
+                <button onclick="editType(<?=$big['id'];?>,this)">修改</button>
+                <button onclick="del('Type',<?=$big['id'];?>)">刪除</button>
+            </td>
+        </tr>
+        <?php
+        // 判斷有沒有中分類
+        if($Type->count(['big_id'=>$big['id']])>0):
+            $mids = $Type->all(['big_id'=>$big['id']]);
+            foreach ($mids as $mid):
+        ?>
+        <tr class='ct'>
+        <td class="pp"><?=$mid['name'];?></td>
         <td class="pp">
-            <button>修改</button>
-            <button>刪除</button>
+        <button onclick="editType(<?=$mid['id'];?>,this)">修改</button>
+            <button onclick="del('Type',<?=$mid['id'];?>)">刪除</button>
         </td>
     </tr>
-    <tr class="ct">
-        <td class="pp">男用皮件</td>
-        <td class="pp">
-            <button>修改</button>
-            <button>刪除</button>
-        </td>
-    </tr>
+    <?php endforeach;
+        endif;
+    endforeach;
+    ?>
 </table>
 
 <script>
@@ -55,18 +62,29 @@
             // ???
             // location.reload();
             // 獲取大分類
-            if (type == 'big') {
+            /* if (type == 'big') {
                 getBigs();
                 $("#big").val("");
             } else {
                 $("#mid").val("");
-            }
+            } */
+           location.reload();
         })
     }
 
     function getBigs() {
         $.get("./api/get_bigs.php", function(bigs) {
             $("#selbig").html(bigs);
+        })
+    }
+
+    function editType(id,dom){
+        let text = $(dom).parent().prev().text();
+        let name = prompt("請輸入你要修改的分類名稱",text);
+
+        $.post("./api/save_types.php",{id,name},function(){
+            // location.reload();
+            $(dom).parent().prev().text(name);
         })
     }
 </script>
