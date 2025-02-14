@@ -52,7 +52,7 @@
 <div class="ct">
     <input type="submit" value="新增" onclick="location.href='./api/save_item.php'">
     <input type="reset" value="重置">
-    <input type="button" value="返回" onclick="location.href='?do=items'">
+    <input type="button" value="返回" onclick="location.href='?do=th'">
 </div>
 </form>
 

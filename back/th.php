@@ -109,11 +109,32 @@
         <td class="ct">狀態</td>
         <td class="ct">操作</td>
     </tr>
-    <tr class="">
-        <td class="ct"></td>
-        <td class="ct"></td>
-        <td class="ct"></td>
-        <td class="ct"></td>
-        <td class="ct"></td>
+    <?php
+    $rows = $Item->all();
+    foreach($rows as $row):
+    ?>
+    <tr class="pp">
+        <td class="ct"><?=$row['no'];?></td>
+        <td class="ct"><?=$row['name'];?></td>
+        <td class="ct"><?=$row['stock'];?></td>
+        <td class="ct"><?=($row['sh']==1)?'販售中':'已下架';?></td>
+        <td class="ct">
+            <button onclick="location.href='?do=edit_item&id=<?=$row['id'];?>'">修改</button>
+            <button onclick="del('Item',<?=$row['id'];?>)">刪除</button>
+            <button onclick="sh(<?=$row['id'];?>),1">上架</button>
+            <button onclick="sh(2,<?=$row['id'];?>,2)">下架</button>
+        </td>
     </tr>
+    <?php endforeach; ?>
 </table>
+
+<script>
+    function sh(id,type,dom){
+        $.post("./api/sh.php",{type,id},function(){
+            // location.reload();
+            // console.log(res);
+            $(dom).parent().prev().text((type==1)?'販售中':'已下架');
+            
+        })
+    }
+</script>
