@@ -71,9 +71,9 @@
            location.reload();
         })
     }
-
+// 0214 get_bigs -> get_types
     function getBigs() {
-        $.get("./api/get_bigs.php", function(bigs) {
+        $.get("./api/get_types.php?type=big", function(bigs) {
             $("#selbig").html(bigs);
         })
     }
@@ -90,10 +90,10 @@
 </script>
 
 
-
+<!-- 0214 教的 -->
 <h2 class="ct">商品管理</h2>
 <div class="ct">
-    <button>新增商品</button>
+    <button onclick="location.href='?do=add_item'">新增商品</button>
 </div>
 <div class="ct">
     <select name="prod" id="prod">
