@@ -11,4 +11,6 @@
  }
 
  $Item->save($_POST);
+
+//  dd($_POST);
  to("../back.php?do=th");

@@ -4,7 +4,7 @@
 // 實際應用要判斷是否有帶id
 $item = $Item->find($_GET['id']);
 ?>
-<form action="./api/save_item.php" method="post">
+<form action="./api/save_item.php" method="post" enctype="multipart/form-data">
     <table class="all">
         <tr>
             <td class="tt ct">所屬大分類</td>
@@ -80,18 +80,14 @@ $item = $Item->find($_GET['id']);
             switch (type) {
                 case 'big':
                     $("#big").html(types)
-                    $("#big option[value='<?=$big['id'];?>']").prop('selected', true);
+                    $("#big option[value='<?=$item['big'];?>']").prop('selected', true);
                     getTypes('mid');
                     break;
                 case 'mid':
                     $("#mid").html(types)
-                    $("#big option[value='<?=$mid['id'];?>']").prop('selected', true);
+                    $("#big option[value='<?=$item['mid'];?>']").prop('selected', true);
                     break;
             }
         })
-    }
-
-    function typeSelected(big, mid) {
-
     }
 </script>
