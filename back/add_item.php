@@ -1,6 +1,6 @@
 <!-- 0214 -->
 <h2 class="ct">新增商品</h2>
-<form action="./api/save_item.php" method="post">
+<form action="./api/save_item.php" method="post" enctype="multipart/form-data">
 <table class="all">
     <tr>
         <td class="tt ct">所屬大分類</td>
@@ -50,7 +50,7 @@
     </tr>
 </table>
 <div class="ct">
-    <input type="submit" value="新增" onclick="location.href='./api/save_item.php'">
+    <input type="submit" value="新增">
     <input type="reset" value="重置">
     <input type="button" value="返回" onclick="location.href='?do=th'">
 </div>

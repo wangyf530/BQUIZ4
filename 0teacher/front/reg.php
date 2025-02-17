@@ -48,6 +48,7 @@ function chkAcc(){
                 alert("帳號已被使用");
             }else{
                 alert("帳號可以使用");
+
             }
         })
     }

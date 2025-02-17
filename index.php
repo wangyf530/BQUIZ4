@@ -50,23 +50,18 @@
         <div id="left" class="ct">
             <div style="min-height:400px;">
                 <!-- 0217 顯示大分類AND中分類(如果有的話) -->
-                 <?php
-                $bigs = $Type->count() - $Type->count(['big_id'=>0]);
-                $num = 0;
-                ?>
-                 <a href="?type=0">全部商品(<?=$bigs;?>)</a>
+                <a href="?type=0">全部商品(<?= $Item->count(['sh' => 1]); ?>)</a>
                 <?php
                 $bigs = $Type->all(['big_id' => 0]);
-                
+                // 大分類
                 foreach ($bigs as $big) {
-                    $num = $Type->count(['big_id'=>$big['id']]);
                     echo "<div class='ww'>";
                     echo "<a href='?type={$big['id']}'>";
                     echo $big['name'];
-                    echo "($num)";
+                    echo "({$Item->count(['big'=>$big['id'],'sh'=>1])})";
                     echo "</a>";
 
-
+                    // 中分類
                     if ($Type->count(['big_id' => $big['id']] > 0)) {
                         $mids = $Type->all(['big_id' => $big['id']]);
                         echo "<div class='s'>";
@@ -74,6 +69,7 @@
                             echo "<a href='?type={$mid['id']}' 
                             style='background-color:rgb(233, 140, 83);'>";
                             echo $mid['name'];
+                            echo "({$Item->count(['mid'=>$mid['id'],'sh'=>1])})";
                             echo "</a>";
                         }
                         echo "</div>";

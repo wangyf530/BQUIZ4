@@ -95,11 +95,11 @@
 <div class="ct">
     <button onclick="location.href='?do=add_item'">新增商品</button>
 </div>
-<div class="ct">
+<!-- <div class="ct">
     <select name="prod" id="prod">
         <option value="all">全部商品</option>
     </select>
-</div>
+</div> -->
 <!-- table.all>tr.tt*2>td.ct*5 -->
 <table class="all">
     <tr class="tt">
@@ -121,8 +121,8 @@
         <td class="ct">
             <button onclick="location.href='?do=edit_item&id=<?=$row['id'];?>'">修改</button>
             <button onclick="del('Item',<?=$row['id'];?>)">刪除</button>
-            <button onclick="sh(<?=$row['id'];?>),1">上架</button>
-            <button onclick="sh(2,<?=$row['id'];?>,2)">下架</button>
+            <button onclick="sh(<?=$row['id'];?>,1)">上架</button>
+            <button onclick="sh(<?=$row['id'];?>,2)">下架</button>
         </td>
     </tr>
     <?php endforeach; ?>
@@ -130,7 +130,7 @@
 
 <script>
     function sh(id,type,dom){
-        $.post("./api/sh.php",{type,id},function(){
+        $.post("./api/sh.php",{type,id},function(res){
             // location.reload();
             // console.log(res);
             $(dom).parent().prev().text((type==1)?'販售中':'已下架');
