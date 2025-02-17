@@ -1,4 +1,4 @@
-<?php include "api/db.php"?>
+<?php include "api/db.php" ?>
 <!DOCTYPE html
     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!-- saved from url=(0039) -->
@@ -30,18 +30,18 @@
                 <a href="?do=look">購物流程</a> |
                 <a href="?do=buycart">購物車</a> |
                 <?php
-                    if(empty($_SESSION['Mem'])){
-                        echo "<a href='?do=login'>會員登入</a> |";
-                    } else {
-                        echo "<a href='./api/logout.php?table=Mem'>會員登出</a> |";
-                    }
+                if (empty($_SESSION['Mem'])) {
+                    echo "<a href='?do=login'>會員登入</a> |";
+                } else {
+                    echo "<a href='./api/logout.php?table=Mem'>會員登出</a> |";
+                }
                 ?>
                 <?php
-                    if(empty($_SESSION['Admin'])){
-                        echo "<a href='?do=admin'>管理登入</a> |";
-                    } else {
-                        echo "<a href='back.php'>後台管理</a> |";
-                    }
+                if (empty($_SESSION['Admin'])) {
+                    echo "<a href='?do=admin'>管理登入</a> |";
+                } else {
+                    echo "<a href='back.php'>後台管理</a> |";
+                }
                 ?>
             </div>
             <!-- 0207 刪掉 -->
@@ -49,6 +49,38 @@
         </div>
         <div id="left" class="ct">
             <div style="min-height:400px;">
+                <!-- 0217 顯示大分類AND中分類(如果有的話) -->
+                 <?php
+                $bigs = $Type->count() - $Type->count(['big_id'=>0]);
+                $num = 0;
+                ?>
+                 <a href="?type=0">全部商品(<?=$bigs;?>)</a>
+                <?php
+                $bigs = $Type->all(['big_id' => 0]);
+                
+                foreach ($bigs as $big) {
+                    $num = $Type->count(['big_id'=>$big['id']]);
+                    echo "<div class='ww'>";
+                    echo "<a href='?type={$big['id']}'>";
+                    echo $big['name'];
+                    echo "($num)";
+                    echo "</a>";
+
+
+                    if ($Type->count(['big_id' => $big['id']] > 0)) {
+                        $mids = $Type->all(['big_id' => $big['id']]);
+                        echo "<div class='s'>";
+                        foreach ($mids as $mid) {
+                            echo "<a href='?type={$mid['id']}' 
+                            style='background-color:rgb(233, 140, 83);'>";
+                            echo $mid['name'];
+                            echo "</a>";
+                        }
+                        echo "</div>";
+                    }
+                    echo "</div>";
+                }
+                ?>
             </div>
             <span>
                 <div>進站總人數</div>
@@ -70,7 +102,7 @@
             ?>
         </div>
         <div id="bottom" style="line-height:70px;background:url(icon/bot.png); color:#FFF;" class="ct">
-            <?= $Bot->find(1)['bot']?></div>
+            <?= $Bot->find(1)['bot'] ?></div>
     </div>
 
 </body>
