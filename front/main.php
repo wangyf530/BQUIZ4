@@ -36,13 +36,12 @@ if ($typeId == 0) {
     }
 </style>
 <?php
-$rows = $Item->all();
-if (isset($big)) {
-    $rows = $Item->all(['mid' => $typeId]);
-} else if ($typeId != 0) {
-    $rows = $Item->all(['big' => $typeId]);
-} else {
-    $rows = $Item->all();
+if($typeId==0){
+    $rows=$Item->all();
+}else if($type['big_id']==0){
+    $rows=$Item->all(['big'=>$typeId]);
+}else{
+    $rows=$Item->all(['mid'=>$typeId]);
 }
 
 foreach ($rows as $row):
