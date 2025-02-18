@@ -121,8 +121,8 @@
         <td class="ct">
             <button onclick="location.href='?do=edit_item&id=<?=$row['id'];?>'">修改</button>
             <button onclick="del('Item',<?=$row['id'];?>)">刪除</button>
-            <button onclick="sh(<?=$row['id'];?>,1)">上架</button>
-            <button onclick="sh(<?=$row['id'];?>,2)">下架</button>
+            <button onclick="sh(<?=$row['id'];?>,1,this)">上架</button>
+            <button onclick="sh(<?=$row['id'];?>,2,this)">下架</button>
         </td>
     </tr>
     <?php endforeach; ?>
@@ -134,6 +134,7 @@
             // location.reload();
             // console.log(res);
             $(dom).parent().prev().text((type==1)?'販售中':'已下架');
+            $(dom).parent().prev().text((type == 1) ? '販售中' : '已下架');
             
         })
     }
