@@ -32,7 +32,7 @@ $row=$Item->find($_GET['id']);
     </div>
     <div class="">
         <div class="tt ct"><?=$row['name'];?></div>
-        <div class="pp">分類：<?= $Type->find($row['big']) . ">" . $Type->find($row['mid']);?></div>
+        <div class="pp">分類：<?= $Type->find($row['big'])['name'] . " > " . $Type->find($row['mid'])['name'];?></div>
         <div class="pp">編號：<?=$row['no'];?></div>
         <div class="pp">價錢：<?=$row['price'];?></div>
         <div class="pp">詳細說明：<br><?=nl2br($row['intro']);?></div>
